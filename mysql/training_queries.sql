@@ -75,11 +75,46 @@ select * from student where age between 5 and 20;
 select * from student where name like 'A%';
 select * from student where city is null;
 
+select avg(price) from course;
+select count(*) from student;
+select count(*) from enrolment where status = 'Active'
+SELECT category, AVG(price) FROM course GROUP BY category;
+select category, sum(price) as total_price from course group by category order by total_price desc;
 
+select name, course_id from student join enrolment on student.id = enrolment.student_id;
+select name, enrolment_date, status from student join enrolment on student.id = enrolment.student_id;
+select student.id,student.name,enrolment.status from student join enrolment on student.id = enrolment.student_id;
 
+select student.id,student.name,course.category from student 
+join enrolment on student.id = enrolment.student_id join course on course.id = enrolment.course_id where category = 'Programming';
 
+select student.city,student.name,course.name,course.price 
+from student join enrolment on student.id = enrolment.student_id join course on course.id = enrolment.course_id;
 
+SELECT student.name, enrolment.status FROM student LEFT JOIN enrolment ON student.id = enrolment.student_id;
 
+select student.id,student.name,course.name,enrolment.status from student 
+left join enrolment on student.id = enrolment.student_id left join course on course.id = enrolment.course_id;
+
+SELECT student.name, enrolment.status FROM student RIGHT JOIN enrolment ON student.id = enrolment.student_id;
+
+SELECT student.name, enrolment.status FROM student FULL OUTER JOIN enrolment ON student.id = enrolment.student_id;
+
+SELECT name, price FROM course WHERE price > (SELECT AVG(price) FROM course);
+select name, price from course where price > (SELECT min(price) FROM course);
+
+select student.name,course.price from student join enrolment on student.id = enrolment.student_id 
+join course on course.id = enrolment.course_id where course.price > (SELECT min(course.price) FROM course);
+
+SELECT * FROM enrolment WHERE course_id IN (SELECT id FROM course WHERE category = 'Programming');
+
+select * from student where id in (select id from enrolment where status = 'Active');
+
+SELECT c1.name, c1.price, c1.category FROM course c1 
+WHERE c1.price > (SELECT AVG(c2.price) FROM course c2 WHERE c2.category = c1.category);
+
+SELECT s.name FROM student s WHERE EXISTS (SELECT 1 FROM enrolment e WHERE e.student_id = s.id);
+SELECT s.name FROM student s WHERE NOT EXISTS (SELECT 1 FROM enrolment e WHERE e.student_id = s.id);
 
 
 
