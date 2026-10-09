@@ -116,6 +116,37 @@ WHERE c1.price > (SELECT AVG(c2.price) FROM course c2 WHERE c2.category = c1.cat
 SELECT s.name FROM student s WHERE EXISTS (SELECT 1 FROM enrolment e WHERE e.student_id = s.id);
 SELECT s.name FROM student s WHERE NOT EXISTS (SELECT 1 FROM enrolment e WHERE e.student_id = s.id);
 
+create table customers(id int, name varchar(20), email varchar(30), city varchar(10), age int, status varchar(10));
 
+alter table customers drop column status;
+alter table customers add column customer_type varchar(10);
 
+INSERT INTO customers(id, name, email, city, age, customer_type)
+SELECT
+    n,
+    'Customer ' || n,
+    'customer' || n || '@email.com',
+
+    CASE
+        WHEN n % 5 = 0 THEN 'Delhi'
+        WHEN n % 5 = 1 THEN 'Mumbai'
+        WHEN n % 5 = 2 THEN 'Noida'
+        WHEN n % 5 = 3 THEN 'Lucknow'
+        ELSE 'Bangalore'
+    END,
+
+    18 + (n % 50),
+
+    CASE
+        WHEN n % 3 = 0 THEN 'Premium'
+        WHEN n % 3 = 1 THEN 'Regular'
+        ELSE 'Basic'
+    END
+
+FROM generate_series(1, 100000) AS gs(n);
+
+select * from customers;
+
+EXPLAIN SELECT * FROM customers WHERE city = 'Delhi';
+EXPLAIN ANALYZE SELECT * FROM customers WHERE city = 'Delhi';
 
